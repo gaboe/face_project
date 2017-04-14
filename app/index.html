@@ -14,6 +14,7 @@
   <link rel="stylesheet" href="./dist/css/bootstrap.css">
   <!-- Custom styles for this template -->
   <link href="./dist/css/jumbotron.css" rel="stylesheet">
+  <link href="./dist/css/site.css" rel="stylesheet">
 
 </head>
 
@@ -83,15 +84,21 @@
       </div>
 
       <div class="col">
-        <button id="personIdByFace" type="button" class="btn btn-primary face-api-btn">Get person id from grom group</button>
+        <button id="personIdByFace" type="button" class="btn btn-primary face-api-btn">Get person id from the group</button>
         <p id="personIdByFace-info"></p>
       </div>
+    </div>
 
+    <div class="row">
+      <div class="col">
+        <button id="nameByFace" type="button" class="btn btn-primary face-api-btn">Get person name from the group</button>
+        <p id="nameByFace-info"></p>
+      </div>
     </div>
 
     <hr>
 
-    <video id="video"></video>
+    <video class="vividli-webcam-video" id="video"></video>
     <canvas id="canvas" style="display:none;"></canvas>
     <div id="buttoncontent">
 
@@ -101,15 +108,14 @@
     </div>
     <button id="startbutton">CAPTURE</button>
 
-    <footer>
-      <p>&copy; Gabriel Ečegi 2017</p>
-    </footer>
-  </div>
-  <!-- /container -->
 
-  <!-- Bootstrap core JavaScript
-    ================================================== -->
-  <!-- Placed at the end of the document so the pages load faster -->
+  </div>
+
+
+  <footer>
+    <p>&copy; Gabriel Ečegi 2017</p>
+  </footer>
+
   <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
     crossorigin="anonymous"></script>
   <script>
@@ -122,6 +128,8 @@
   <script src="./dist/js/app.js"></script>
   <script src="./dist/js/camera.js"></script>
   <script src="./dist/js/imgurClient.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+
 
 
   <script>
@@ -148,11 +156,17 @@
       }))
     })
 
-     $('#personIdByFace').click(function () {
+    $('#personIdByFace').click(function () {
       getPersonId((function (data) {
         $('#personIdByFace-info').empty().append(`<p> personId: ${data[0].candidates[0].personId} 
                                         \n with confidence: ${data[0].candidates[0].confidence} 
                                         faceId: ${data[0].faceId} </p>`);
+      }))
+    })
+
+    $('#nameByFace').click(function () {
+      getPersonName((function (person) {
+        $('#nameByFace-info').empty().append(`${person.name}`);
       }))
     })
   </script>

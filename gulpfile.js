@@ -13,7 +13,7 @@ var scripts = [
 ];
 
 gulp.task('css', function () {
-  return gulp.src('./bower_components/bootstrap/scss/*.scss')
+  return gulp.src(['./bower_components/bootstrap/scss/*.scss', './app/styles/site.scss'])
     .pipe(sass({
       //includePaths: [config.bootstrapDir + '/assets/stylesheets'],
     }))
@@ -40,10 +40,14 @@ gulp.task('html', function () {
 });
 
 gulp.task('watch', function () {
-  gulp.watch(['./app/*.html', './app/*.js','./app/js/*.js'], ['html', 'js']);
+  gulp.watch(['./app/*.html', './app/*.js', './app/js/*.js',], ['html', 'js']);
 });
 
-gulp.task('default', ['connect', 'watch']);
+gulp.task('watch-styles', function () {
+  gulp.watch(['./app/styles/*.scss',], ['css']);
+});
+
+gulp.task('default', ['connect', 'watch','watch-styles']);
 
 gulp.task('bundle', function () {
   return browserify({ entries: scripts })

@@ -28,6 +28,14 @@ makeblob = function (dataURL) {
     return new Blob([uInt8Array], { type: contentType });
 }
 
+function getPersonName(callback = function () { }, groupId = vividliGroupId) {
+    getPersons(persons => {
+        getPersonId(personIdData => {
+            callback(_.findWhere(persons, { personId: personIdData[0].candidates[0].personId }));
+        });
+    });
+}
+
 function trainGroup(callback = function () { }, groupId = vividliGroupId) {
     return $.ajax({
         url: `${apiUrl}/persongroups/${groupId}/train`,
@@ -126,7 +134,7 @@ function addPersonFace(personId, groupId = vividliGroupId) {
 }
 
 
-function getPersons(groupId = vividliGroupId, callback = function () { }) {
+function getPersons(callback = function () { }, groupId = vividliGroupId) {
     return $.ajax({
         url: `${apiUrl}/persongroups/${groupId}/persons`,
         beforeSend: function (xhrObj) {
