@@ -28,6 +28,78 @@ makeblob = function (dataURL) {
     return new Blob([uInt8Array], { type: contentType });
 }
 
+function trainGroup(callback = function () { }, groupId = vividliGroupId) {
+    return $.ajax({
+        url: `${apiUrl}/persongroups/${groupId}/train`,
+        beforeSend: function (xhrObj) {
+            xhrObj.setRequestHeader("Content-Type", "application/json");
+            xhrObj.setRequestHeader("Ocp-Apim-Subscription-Key", apiKey);
+        },
+        type: "POST"
+    }).always(() => callback());
+}
+
+
+function getPersonId(callback = function () { }, groupId = vividliGroupId) {
+    trainGroup(() => {
+        getFaceId((function (data) {
+            const faceId = data[0].faceId;
+            return $.ajax({
+                url: `${apiUrl}/identify`,
+                beforeSend: function (xhrObj) {
+                    xhrObj.setRequestHeader("Content-Type", "application/json");
+                    xhrObj.setRequestHeader("Ocp-Apim-Subscription-Key", apiKey);
+                },
+                data: JSON.stringify({
+                    personGroupId: groupId,
+                    faceIds: [faceId]
+                }),
+                type: "POST",
+            }).always(function (response) {
+                callback(response);
+            });
+        }));
+    })
+
+}
+
+function getFaceId(callback = function () { }, groupId = vividliGroupId) {
+    return $.when(postToImgur()).then(function (response) {
+
+        $.ajax({
+            url: `${apiUrl}/detect?returnFaceId=${returnFaceId}&returnFaceLandmarks=${returnFaceLandmarks}`,
+            beforeSend: function (xhrObj) {
+                xhrObj.setRequestHeader("Content-Type", "application/json");
+                xhrObj.setRequestHeader("Ocp-Apim-Subscription-Key", apiKey);
+            },
+            data: JSON.stringify({ url: photoUrl }),
+            type: "POST",
+        }).always(function (response) {
+            deleteFromImgur(photoId);
+            callback(response);
+        });
+    });
+}
+
+
+function getFaceId(callback = function () { }, returnFaceId = true, returnFaceLandmarks = true) {
+    return $.when(postToImgur()).then(function (response) {
+        var photoUrl = response.data.link;
+        var photoId = response.data.deletehash;
+        $.ajax({
+            url: `${apiUrl}/detect?returnFaceId=${returnFaceId}&returnFaceLandmarks=${returnFaceLandmarks}`,
+            beforeSend: function (xhrObj) {
+                xhrObj.setRequestHeader("Content-Type", "application/json");
+                xhrObj.setRequestHeader("Ocp-Apim-Subscription-Key", apiKey);
+            },
+            data: JSON.stringify({ url: photoUrl }),
+            type: "POST",
+        }).always(function (response) {
+            deleteFromImgur(photoId);
+            callback(response);
+        });
+    });
+}
 
 function addPersonFace(personId, groupId = vividliGroupId) {
     // let blob = ($('#photo').attr('src')).replace(/^data:image\/(png|jpg);base64,/, "");//makeblob($('#photo').attr('src'));
@@ -49,7 +121,7 @@ function addPersonFace(personId, groupId = vividliGroupId) {
             $("#face-add-info").text(JSON.stringify(error));
         }).always(function () {
             deleteFromImgur(photoId);
-        });;
+        });
     });
 }
 
@@ -66,8 +138,6 @@ function getPersons(groupId = vividliGroupId, callback = function () { }) {
 }
 
 function getGroup(groupID, callback) {
-    let data;
-
     $.ajax({
         url: `${apiUrl}/persongroups/${groupID}`,
         beforeSend: function (xhrObj) {

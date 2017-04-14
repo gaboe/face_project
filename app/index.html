@@ -48,10 +48,8 @@
   <!-- Main jumbotron for a primary marketing message or call to action -->
   <div class="jumbotron">
     <div class="container">
-      <h1 class="display-3">Hello, world!</h1>
-      <p>This is a template for a simple marketing or informational website. It includes a large callout called a jumbotron
-        and three supporting pieces of content. Use it as a starting point to create something more unique.</p>
-      <p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more &raquo;</a></p>
+      <h1 class="display-3">Hello there!</h1>
+      <p>I have prepared collection of examle usages of Microsoft Face APIs</p>
     </div>
   </div>
 
@@ -59,22 +57,34 @@
 
     <div class="row">
       <div class="col">
-        <button id="group" type="button" class="btn btn-primary">Group</button>
+        <button id="group" type="button" class="btn btn-primary face-api-btn">Group</button>
         <p id="group-info"></p>
       </div>
       <div class="col">
-        <button id="face" type="button" class="btn btn-primary">Hej</button>
-        <p id="face-info"></p>
+        <button id="personsInGroup" type="button" class="btn btn-primary face-api-btn">Persons in group</button>
+        <ul id="personsInGroup-list"></ul>
       </div>
 
       <div class="col">
-        <button id="addFace" type="button" class="btn btn-primary">AddFace</button>
+        <button id="addFace" type="button" class="btn btn-primary face-api-btn">AddFace</button>
         <p id="face-add-info"></p>
       </div>
 
       <div class="col">
-        <button id="identifyFace" type="button" class="btn btn-primary">AddFace</button>
-        <p id="face-add-info"></p>
+        <button id="identifyFace" type="button" class="btn btn-disabled face-api-btn">Get person by name</button>
+        <p id="identifyFace-info"></p>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col">
+        <button id="faceId" type="button" class="btn btn-primary face-api-btn">Get face id</button>
+        <p id="faceId-info"></p>
+      </div>
+
+      <div class="col">
+        <button id="personIdByFace" type="button" class="btn btn-primary face-api-btn">Get person id from grom group</button>
+        <p id="personIdByFace-info"></p>
       </div>
 
     </div>
@@ -111,6 +121,8 @@
   <script src="./dist/js/ie10-viewport-bug-workaround.js"></script>
   <script src="./dist/js/app.js"></script>
   <script src="./dist/js/camera.js"></script>
+  <script src="./dist/js/imgurClient.js"></script>
+
 
   <script>
     $('#group').click(function () {
@@ -119,9 +131,9 @@
       });
     });
 
-    $('#face').click(function () {
-      $.when(getPersons()).then(function (x) {
-        const users = x;
+    $('#personsInGroup').click(function () {
+      $.when(getPersons()).then(function (users) {
+        users.map((x => $('#personsInGroup-list').append(`<li>${x.name} with personId ${x.personId}</li>`)))
         console.log(users);
       });
     });
@@ -130,8 +142,18 @@
       addPersonFace(gaboId);
     })
 
-    $('#identifyFace').click(function () {
-      identifyFace();
+    $('#faceId').click(function () {
+      getFaceId((function (data) {
+        $('#faceId-info').text(`faceId: ${data[0].faceId}`);
+      }))
+    })
+
+     $('#personIdByFace').click(function () {
+      getPersonId((function (data) {
+        $('#personIdByFace-info').empty().append(`<p> personId: ${data[0].candidates[0].personId} 
+                                        \n with confidence: ${data[0].candidates[0].confidence} 
+                                        faceId: ${data[0].faceId} </p>`);
+      }))
     })
   </script>
 </body>

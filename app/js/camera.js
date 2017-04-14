@@ -1,4 +1,4 @@
-(function() {
+(function () {
 
   var streaming = false,
     video = document.querySelector('#video'),
@@ -15,10 +15,10 @@
     navigator.msGetUserMedia);
 
   navigator.getMedia({
-      video: true,
-      audio: false
-    },
-    function(stream) {
+    video: true,
+    audio: false
+  },
+    function (stream) {
       if (navigator.mozGetUserMedia) {
         video.mozSrcObject = stream;
       } else {
@@ -27,12 +27,12 @@
       }
       video.play();
     },
-    function(err) {
+    function (err) {
       console.log("An error occured! " + err);
     }
   );
 
-  video.addEventListener('canplay', function(ev) {
+  video.addEventListener('canplay', function (ev) {
     if (!streaming) {
       height = video.videoHeight / (video.videoWidth / width);
       video.setAttribute('width', width);
@@ -46,7 +46,7 @@
   function takepicture() {
     video.style.display = "none";
     canvas.style.display = "block";
-    startbutton.innerText= "RETAKE";
+    startbutton.innerText = "RETAKE";
     canvas.width = width;
     canvas.height = height;
     canvas.getContext('2d').drawImage(video, 0, 0, width, height);
@@ -55,18 +55,22 @@
     photo.setAttribute('src', data);
   }
 
-  startbutton.addEventListener('click', function(ev) {
-    if(startbutton.innerText==="CAPTURE")
-    {
-        takepicture();
+  startbutton.addEventListener('click', function (ev) {
+    if (startbutton.innerText === "CAPTURE") {
+      takepicture();
     }
-    else
-    {
-        video.style.display = "block";
-        canvas.style.display = "none";
-      startbutton.innerText= "CAPTURE";
+    else {
+      video.style.display = "block";
+      canvas.style.display = "none";
+      startbutton.innerText = "CAPTURE";
     }
     ev.preventDefault();
   }, false);
 
+  $(".face-api-btn").on('click', () => {
+    if (startbutton.innerText !== "CAPTURE")
+      return
+    var event = new Event('click');
+    startbutton.dispatchEvent(event);
+  })
 })();
