@@ -67,9 +67,29 @@
         <p id="face-info"></p>
       </div>
 
+      <div class="col">
+        <button id="addFace" type="button" class="btn btn-primary">AddFace</button>
+        <p id="face-add-info"></p>
+      </div>
+
+      <div class="col">
+        <button id="identifyFace" type="button" class="btn btn-primary">AddFace</button>
+        <p id="face-add-info"></p>
+      </div>
+
     </div>
 
     <hr>
+
+    <video id="video"></video>
+    <canvas id="canvas" style="display:none;"></canvas>
+    <div id="buttoncontent">
+
+    </div>
+    <div id="photo">
+
+    </div>
+    <button id="startbutton">CAPTURE</button>
 
     <footer>
       <p>&copy; Gabriel Ečegi 2017</p>
@@ -90,7 +110,7 @@
   <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
   <script src="./dist/js/ie10-viewport-bug-workaround.js"></script>
   <script src="./dist/js/app.js"></script>
-
+  <script src="./dist/js/camera.js"></script>
 
   <script>
     $('#group').click(function () {
@@ -98,6 +118,21 @@
         $('#group-info').text(JSON.stringify(response));
       });
     });
+
+    $('#face').click(function () {
+      $.when(getPersons()).then(function (x) {
+        const users = x;
+        console.log(users);
+      });
+    });
+
+    $('#addFace').click(function () {
+      addPersonFace(gaboId);
+    })
+
+    $('#identifyFace').click(function () {
+      identifyFace();
+    })
   </script>
 </body>
 

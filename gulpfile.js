@@ -8,7 +8,8 @@ var bower_base = './bower_components/';
 var scripts = [
   bower_base + 'jquery/dist/jquery.min.js',
   bower_base + 'jquery/dist/jquery.min.map',
-  './app.js'
+  './app/app.js',
+  './app/js/*.js',
 ];
 
 gulp.task('css', function () {
@@ -39,7 +40,7 @@ gulp.task('html', function () {
 });
 
 gulp.task('watch', function () {
-  gulp.watch(['./app/*.html','*.js'], ['html', 'js']);
+  gulp.watch(['./app/*.html', './app/*.js','./app/js/*.js'], ['html', 'js']);
 });
 
 gulp.task('default', ['connect', 'watch']);
