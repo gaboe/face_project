@@ -305,7 +305,7 @@ function getPersons(callback = function () { }, groupId = vividliGroupId) {
     }).done(function (data) { return callback(data) });
 }
 
-function getGroup(groupID, callback) {
+function getGroup(callback,groupID = vividliGroupId) {
     $.ajax({
         url: `${apiUrl}/persongroups/${groupID}`,
         beforeSend: function (xhrObj) {

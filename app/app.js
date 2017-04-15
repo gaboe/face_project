@@ -1,5 +1,5 @@
 const apiKey = "18923e2aa30b426eb624bd4b47f26034";
-const vividliGroupId = 17171717;
+const vividliGroupId = 17;
 const gaboId = '9a6ac3ab-ec6a-4025-b1e1-533c833f30cd';
 var apiUrl = "https://westus.api.cognitive.microsoft.com/face/v1.0";
 
@@ -138,7 +138,7 @@ function getPersons(callback = function () { }, groupId = vividliGroupId) {
     }).done(function (data) { return callback(data) });
 }
 
-function getGroup(groupID, callback) {
+function getGroup(callback,groupID = vividliGroupId) {
     $.ajax({
         url: `${apiUrl}/persongroups/${groupID}`,
         beforeSend: function (xhrObj) {

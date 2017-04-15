@@ -10,7 +10,7 @@
 
   <title>Vividli face recognition app</title>
 
-  <link rel="stylesheet" href="./dist/css/bundle.css">
+  <link rel="stylesheet" href="./dist/css/bundle.min.css">
   <link rel="stylesheet" href="http://tawian.io/text-spinners/spinners.css">
   <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN"
     crossorigin="anonymous">
@@ -201,7 +201,7 @@
 
     $('#group').click(function () {
       if ($(this).text() === "Group") {
-        var resp = getGroup(17171717, function (response) {
+        var resp = getGroup(function (response) {
           Object.entries(response).forEach(
             ([key, value]) => $('#group-info').append(`<li><b>${key}</b>: ${value}</li>`));
           $('#group').text("Hide");
