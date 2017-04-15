@@ -26,24 +26,20 @@
             aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-        <a class="navbar-brand" href="#">Navbar</a>
+        <a class="navbar-brand" href="#">vividli</a>
 
         <div class="collapse navbar-collapse" id="navbarsExampleDefault">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item active">
-                    <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                    <a class="nav-link" href="./">Home <span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Link</a>
+                    <a class="nav-link" href="/login.html">Login</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link disabled" href="#">Disabled</a>
+                    <a class="nav-link disabled" href="#">Destroy world</a>
                 </li>
             </ul>
-            <form class="form-inline my-2 my-lg-0">
-                <input class="form-control mr-sm-2" type="text" placeholder="Search">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-            </form>
         </div>
     </nav>
 
@@ -55,16 +51,19 @@
         </div>
     </div>
     <div class="container super-center">
-        <div class="container">
-            <video class="vividli-webcam-video" id="video"></video>
-            <canvas id="canvas" style="display:none;"></canvas>
-            <div id="buttoncontent"> </div>
-            <div id="photo"> </div>
-            <button class="btn btn-success" id="startbutton">CAPTURE</button>
+        <div class="row">
+            <div class="container">
+                <video class="vividli-webcam-video" id="video"></video>
+                <canvas id="canvas" style="display:none;"></canvas>
+                <div id="buttoncontent"> </div>
+                <div id="photo"> </div>
+                <button class="btn btn-success" id="startbutton">CAPTURE</button>
+            </div>
         </div>
+
     </div>
 
-    <footer>
+    <footer class="footer">
         <p>&copy; Gabriel Ečegi 2017</p>
     </footer>
 
@@ -86,7 +85,6 @@
     <script src="./dist/js/app.js"></script>
 
     <script>
-        
         $("#startbutton").click(function () {
 
             $('head').trigger('click');

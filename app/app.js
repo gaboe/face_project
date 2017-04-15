@@ -28,7 +28,7 @@ makeblob = function (dataURL) {
     return new Blob([uInt8Array], { type: contentType });
 }
 
-function getPersonByPersonId(personId, callback = function () { }, groupID = vividliGroupId) {
+function getPersonByPersonId(personId, callback = function () { }, groupId = vividliGroupId) {
     return $.ajax({
         url: `${apiUrl}/persongroups/${groupId}/persons/${personId}`,
         beforeSend: function (xhrObj) {
@@ -217,3 +217,13 @@ $('head').avgrund({
                         <span class="loading words"></span>
                        </div>`,
 });
+
+function modalEffectStart() {
+    $('head').trigger('click');
+    $('footer').css("display", "none");
+}
+
+function modalEffectEnd() {
+    $(".avgrund-close").trigger("click");
+    $('footer').css("display", "");
+}

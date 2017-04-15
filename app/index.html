@@ -25,7 +25,7 @@
       aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-    <a class="navbar-brand" href="#">Navbar</a>
+    <a class="navbar-brand" href="#">vividli</a>
 
     <div class="collapse navbar-collapse" id="navbarsExampleDefault">
       <ul class="navbar-nav mr-auto">
@@ -33,24 +33,20 @@
           <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Link</a>
+          <a class="nav-link" href="/login.html">Login</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link disabled" href="#">Disabled</a>
+          <a class="nav-link disabled" href="#">Destroy world</a>
         </li>
       </ul>
-      <form class="form-inline my-2 my-lg-0">
-        <input class="form-control mr-sm-2" type="text" placeholder="Search">
-        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-      </form>
     </div>
   </nav>
 
   <!-- Main jumbotron for a primary marketing message or call to action -->
   <div class="jumbotron">
     <div class="container">
-      <h1 class="display-3">Hello there!</h1>
-      <p>I have prepared collection of examle usages of Microsoft Face APIs</p>
+      <h1 class="display-3">Let's have fun!</h1>
+      <p>After you are logged in you can have fun with implemented api features. There will be other features after time.</p>
     </div>
   </div>
 
@@ -90,47 +86,52 @@
         </div>
 
         <div class="row">
-          <div class="col">
-          </div>
-          
-          <div class="col">
-            <button id="addFace" type="button" class="btn btn-primary face-api-btn">AddFace</button>
-            <p id="addFace-info"></p>
-          </div>
+          <h4>You got some photos, so artificial intelligence, knows it's you.</h4>
+        </div>
+        <ul id="my-photos-info"></ul>
 
-          <div class="col">
-            <button id="identifyFace" type="button" class="btn btn-disabled face-api-btn">Get person by name</button>
-            <p id="identifyFace-info"></p>
-          </div>
+        <div class="row">
+          <button id="my-photos" type="button" class="btn btn-sm btn-primary">Show them</button>
         </div>
 
         <div class="row">
-          <div class="col">
-            <button id="faceId" type="button" class="btn btn-primary face-api-btn">Get face id</button>
-            <p id="faceId-info"></p>
-          </div>
+          <h4>If you want to add new photo let's look at the camera and press button</h4>
+        </div>
+        <ul id="add-face-info"></ul>
 
-          <div class="col">
-            <button id="personIdByFace" type="button" class="btn btn-primary face-api-btn">Get person id from the group</button>
-            <p id="personIdByFace-info"></p>
-          </div>
+        <div class="row">
+          <button type="button" class="btn btn-sm btn-primary "> 
+            <i  id="add-face" class="fa fa-camera face-api-btn" aria-hidden="true">    Add face</i>   </button>
         </div>
 
         <div class="row">
-          <div class="col">
-            <button id="nameByFace" type="button" class="btn btn-primary face-api-btn">Get person name from the group</button>
-            <p id="nameByFace-info"></p>
-          </div>
+          <h4>Hey, I guess, you are pretty interested about your faceId</h4>
+        </div>
+        <p id="get-faceId-info"></p>
+
+        <div class="row">
+          <button type="button" class="btn btn-sm btn-primary "> 
+            <i  id="get-faceId" class="fa fa-camera face-api-btn" aria-hidden="true">    Get faceId</i>   </button>
         </div>
 
-        <hr>
+        <div class="row">
+          <h4>What about your personId?</h4>
+        </div>
+        <p id="get-personId-info"></p>
+
+        <div class="row">
+          <button type="button" class="btn btn-sm btn-primary "> 
+            <i  id="get-personId" class="fa fa-camera face-api-btn" aria-hidden="true">    Get personId</i>   </button>
+        </div>
       </div>
+      <hr>
     </div>
+  </div>
   </div>
 
 
 
-  <footer>
+  <footer class="footer">
     <p>&copy; Gabriel Ečegi 2017</p>
   </footer>
 
@@ -149,12 +150,29 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
   <script src="./dist/js/cookie.js"></script>
   <script src="./dist/js/app.js"></script>
-
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN"
+    crossorigin="anonymous">
+  <link rel="stylesheet" href="http://tawian.io/text-spinners/spinners.css">
 
   <script>
     if (readCookie("vividli-face") === null) {
       window.location.href = window.location.href + '/login.html'
     }
+
+    $('#my-photos').click(function () {
+      if ($(this).text() === "Show them") {
+        $('#my-photos-info').append(`<li><b>There should be data attached to photos but, they didn't provided it, for some reason. So there's list of ids</b></li>`);
+        getPersonByPersonId(readCookie("vividli-face"), response => {
+          response.persistedFaceIds.forEach(x => $('#my-photos-info').append(`<li>${x}</li>`));
+          $('#my-photos').text("Hide");
+        });
+      }
+      else {
+        $('#my-photos-info').empty();
+        $(this).text("Show them");
+      }
+    });
+
     $('#group').click(function () {
       if ($(this).text() === "Group") {
         var resp = getGroup(17171717, function (response) {
@@ -176,16 +194,71 @@
           $('#people-in-group').text("Hide");
         });
       }
-      else{
-         $('#people-in-group-info').empty();
-        $(this).text("People in the group");
+      else {
+        $('#people-in-group-info').empty();
+        $(this).text("Hide");
       }
     });
 
-    $('#addFace').click(function () {
-      addPersonFace(gaboId, response => {
-        $("#addFace-info").text(JSON.stringify(response));
-      });
+    $('#add-face').click(function () {
+      if ($(this).text() === "    Add face") {
+        $('head').trigger('click');
+        addPersonFace(gaboId, response => {
+          $("#add-face-info").text(`FaceId: ${response.persistedFaceId}`);
+          $('#add-face').text("   Hide");
+          $(".avgrund-close").trigger("click");
+        });
+      }
+      else {
+        $('#add-face-info').empty();
+        $(this).text("    Add face");
+      }
+    })
+
+    $('#get-faceId').click(function () {
+      if ($(this).text() === "    Get faceId") {
+        modalEffectStart();
+        getFaceId(response => {
+          try {
+            $("#get-faceId-info").text(`faceId: ${data[0].faceId}`);
+            $('#get-faceId').text("   Hide");
+            modalEffectEnd();
+          }
+          catch (e) {
+            $("#get-faceId-info").text(`Error occured because somebody was not looking at the camera`);
+            $('#get-faceId').text("   Hide");
+            modalEffectEnd();
+          }
+        });
+      }
+      else {
+        $('#get-faceId-info').empty();
+        $(this).text("    Get faceId");
+      }
+    })
+
+    $('#get-personId').click(function () {
+      if ($(this).text() === "    Get personId") {
+        modalEffectStart();
+        getPersonId((function (data) {
+          try {
+            $('#get-personId-info').empty().append(`personId: ${data[0].candidates[0].personId}
+            \n with confidence: ${data[0].candidates[0].confidence}
+          faceId: ${data[0].faceId}`);
+            modalEffectEnd();
+
+          }
+          catch (e) {
+            $("#get-personId-info").text(`Error occured because somebody was not looking at the camera`);
+            $('#get-personId').text("   Hide");
+            modalEffectEnd();
+          }
+        }));
+      }
+      else {
+        $('#get-faceId-info').empty();
+        $(this).text("    Get personId");
+      }
     })
 
     $('#faceId').click(function () {
@@ -196,9 +269,9 @@
 
     $('#personIdByFace').click(function () {
       getPersonId((function (data) {
-        $('#personIdByFace-info').empty().append(`<p> personId: ${data[0].candidates[0].personId} 
-                                        \n with confidence: ${data[0].candidates[0].confidence} 
-                                        faceId: ${data[0].faceId} </p>`);
+        $('#personIdByFace-info').empty().append(`< p > personId: ${data[0].candidates[0].personId}
+            \n with confidence: ${data[0].candidates[0].confidence}
+          faceId: ${data[0].faceId} </p>`);
       }))
     })
 
@@ -206,7 +279,9 @@
       getPerson((function (person) {
         $('#nameByFace-info').empty().append(`${person.name}`);
       }))
-    })
+    });
+
+
   </script>
 </body>
 
