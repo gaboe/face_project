@@ -13,10 +13,10 @@
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="./dist/css/bootstrap.css">
     <!-- Custom styles for this template -->
-    <link href="./dist/css/jumbotron.css" rel="stylesheet">
     <link href="./dist/css/site.css" rel="stylesheet">
     <link href="./dist/css/sweetalert.css" rel="stylesheet">
-
+    <link rel="stylesheet" href="http://tawian.io/text-spinners/spinners.css">
+    <link rel="stylesheet" href="./dist/css/avgrund.css">
 </head>
 
 <body>
@@ -54,18 +54,16 @@
             <p>I have prepared collection of examle usages of Microsoft Face APIs</p>
         </div>
     </div>
-    <div class="container col-auto">
-
-        <div class="offset-md-4">
-            <div class="container">
-                <video class="vividli-webcam-video" id="video"></video>
-                <canvas id="canvas" style="display:none;"></canvas>
-                <div id="buttoncontent"> </div>
-                <div id="photo"> </div>
-                <button class="btn btn-success offset-md-3" id="startbutton">CAPTURE</button>
-            </div>
+    <div class="container super-center">
+        <div class="container">
+            <video class="vividli-webcam-video" id="video"></video>
+            <canvas id="canvas" style="display:none;"></canvas>
+            <div id="buttoncontent"> </div>
+            <div id="photo"> </div>
+            <button class="btn btn-success" id="startbutton">CAPTURE</button>
         </div>
     </div>
+
     <footer>
         <p>&copy; Gabriel Ečegi 2017</p>
     </footer>
@@ -79,16 +77,22 @@
         crossorigin="anonymous"></script>
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="./dist/js/ie10-viewport-bug-workaround.js"></script>
-    <script src="./dist/js/app.js"></script>
     <script src="./dist/js/camera.js"></script>
     <script src="./dist/js/imgurClient.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
     <script src="./dist/js/sweetalert.min.js"></script>
+    <script src="./dist/js/cookie.js"></script>
+    <script src="./dist/js/jquery.avgrund.min.js"></script>
+    <script src="./dist/js/app.js"></script>
 
     <script>
+        
         $("#startbutton").click(function () {
-            if ($(this).text() === "CAPTURE") return;
+
+            $('head').trigger('click');
             $.when(getPersonId(function (response) {
+                $(".avgrund-close").trigger("click");
+
                 if (response === 0) {
                     return swal("Cancelled", "We cannot recognize anyone on photo, please try again", "error");
                 }
@@ -107,7 +111,7 @@
 
                             if (inputValue === "") {
                                 swal.showInputError("You need to write your nickname!");
-                                return false
+                                return false;
                             }
                             return createPerson({ name: inputValue, userData: new Date().toDateString() }, (response) => {
                                 if (response.personId !== undefined) {
@@ -128,7 +132,20 @@
                 else if (response[0].candidates[0].personId != undefined) {
                     isPersonInGroup(response[0].candidates[0].personId, (person) => {
                         if (person !== undefined) {
-                            swal("Face has been recognized!", `And belongs to ... ${person.name}`, "success");
+                            createCookie('vividli-face', person.personId, 1);
+                            console.log(readCookie(person.personId));
+                            swal({
+                                title: "Face has been recognized!",
+                                text: `And belongs to ... ${person.name}`,
+                                type: "success",
+                                showCancelButton: false,
+                                closeOnConfirm: false,
+                                showLoaderOnConfirm: true,
+                            },
+                                function () {
+                                    url = window.location.href;
+                                    window.location.href = url.replace('/login.html', ' ');
+                                });
                         }
                     })
                 }

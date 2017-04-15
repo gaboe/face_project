@@ -44,8 +44,8 @@
   }, false);
 
   function takepicture() {
-    video.style.display = "none";
-    canvas.style.display = "block";
+    // video.style.display = "none";
+    // canvas.style.display = "block";
     startbutton.innerText = "RETAKE";
     canvas.width = width;
     canvas.height = height;
@@ -55,22 +55,26 @@
     photo.setAttribute('src', data);
   }
 
-  startbutton.addEventListener('click', function (ev) {
-    if (startbutton.innerText === "CAPTURE") {
-      takepicture();
-    }
-    else {
-      video.style.display = "block";
-      canvas.style.display = "none";
-      startbutton.innerText = "CAPTURE";
-    }
-    ev.preventDefault();
-  }, false);
+  // startbutton.addEventListener('click', function (ev) {
+  //   if (startbutton.innerText === "CAPTURE") {
+  //     takepicture();
+  //   }
+  //   else {
+  //     // video.style.display = "block";
+  //     // canvas.style.display = "none";
+  //     startbutton.innerText = "CAPTURE";
+  //   }
+  //   ev.preventDefault();
+  // }, false);
+
+  $("#startbutton").on("click", x => {
+    $("#startbutton").text() === "CAPTURE" ? $("#startbutton").text("RETAKE") : $("#startbutton").text("CAPTURE");
+    takepicture();
+  }
+  );
+
 
   $(".face-api-btn").on('click', () => {
-    if (startbutton.innerText !== "CAPTURE")
-      return
-    var event = new Event('click');
-    startbutton.dispatchEvent(event);
+    takepicture();
   })
 })();

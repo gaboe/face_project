@@ -10,11 +10,13 @@ var scripts = [
   bower_base + 'jquery/dist/jquery.min.map',
   './app/app.js',
   './app/js/*.js',
-  bower_base + 'sweetalert/dist/sweetalert.min.js'
+  bower_base + 'sweetalert/dist/sweetalert.min.js',
+  './bower_components/jquery.avgrund/jquery.avgrund.min.js',
+
 ];
 
 gulp.task('css', function () {
-  return gulp.src(['./bower_components/bootstrap/scss/*.scss', './app/styles/site.scss', bower_base + 'sweetalert/dist/sweetalert.css'])
+  return gulp.src(['./bower_components/bootstrap/scss/*.scss', './app/styles/site.scss', bower_base + 'sweetalert/dist/sweetalert.css', bower_base + 'jquery.avgrund/style/avgrund.css'])
     .pipe(sass({
       //includePaths: [config.bootstrapDir + '/assets/stylesheets'],
     }))

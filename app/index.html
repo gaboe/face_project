@@ -13,8 +13,8 @@
   <!-- Bootstrap core CSS -->
   <link rel="stylesheet" href="./dist/css/bootstrap.css">
   <!-- Custom styles for this template -->
-  <link href="./dist/css/jumbotron.css" rel="stylesheet">
   <link href="./dist/css/site.css" rel="stylesheet">
+  <link rel="stylesheet" href="./dist/css/avgrund.css">
 
 </head>
 
@@ -55,61 +55,79 @@
   </div>
 
   <div class="container">
-
     <div class="row">
-      <div class="col">
-        <button id="group" type="button" class="btn btn-primary face-api-btn">Group</button>
-        <p id="group-info"></p>
-      </div>
-      <div class="col">
-        <button id="personsInGroup" type="button" class="btn btn-primary face-api-btn">Persons in group</button>
-        <ul id="personsInGroup-list"></ul>
+
+      <div class="video-container">
+        <div class="row">
+          <video class="vividli-webcam-video" id="video"></video>
+          <canvas id="canvas" style="display:none;"></canvas>
+          <div id="buttoncontent">
+          </div>
+          <div id="photo">
+          </div>
+          <button style="display:none" class="btn btn-success offset-md-8" id="startbutton">CAPTURE</button>
+        </div>
       </div>
 
-      <div class="col">
-        <button id="addFace" type="button" class="btn btn-primary face-api-btn">AddFace</button>
-        <p id="addFace-info"></p>
-      </div>
+      <div class="container offset-4">
+        <div class="row">
+          <h4>Click on the button to see group info</h4>
+        </div>
+        <ul id="group-info"></ul>
 
-      <div class="col">
-        <button id="identifyFace" type="button" class="btn btn-disabled face-api-btn">Get person by name</button>
-        <p id="identifyFace-info"></p>
+        <div class="row">
+          <button id="group" type="button" class="btn btn-sm btn-primary">Group</button>
+        </div>
+
+
+        <div class="row">
+          <h4>Wanna see people in the group? Click here !</h4>
+        </div>
+        <ul id="people-in-group-info"></ul>
+
+        <div class="row">
+          <button id="people-in-group" type="button" class="btn btn-sm btn-primary">People in the group</button>
+        </div>
+
+        <div class="row">
+          <div class="col">
+          </div>
+          
+          <div class="col">
+            <button id="addFace" type="button" class="btn btn-primary face-api-btn">AddFace</button>
+            <p id="addFace-info"></p>
+          </div>
+
+          <div class="col">
+            <button id="identifyFace" type="button" class="btn btn-disabled face-api-btn">Get person by name</button>
+            <p id="identifyFace-info"></p>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col">
+            <button id="faceId" type="button" class="btn btn-primary face-api-btn">Get face id</button>
+            <p id="faceId-info"></p>
+          </div>
+
+          <div class="col">
+            <button id="personIdByFace" type="button" class="btn btn-primary face-api-btn">Get person id from the group</button>
+            <p id="personIdByFace-info"></p>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col">
+            <button id="nameByFace" type="button" class="btn btn-primary face-api-btn">Get person name from the group</button>
+            <p id="nameByFace-info"></p>
+          </div>
+        </div>
+
+        <hr>
       </div>
     </div>
-
-    <div class="row">
-      <div class="col">
-        <button id="faceId" type="button" class="btn btn-primary face-api-btn">Get face id</button>
-        <p id="faceId-info"></p>
-      </div>
-
-      <div class="col">
-        <button id="personIdByFace" type="button" class="btn btn-primary face-api-btn">Get person id from the group</button>
-        <p id="personIdByFace-info"></p>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col">
-        <button id="nameByFace" type="button" class="btn btn-primary face-api-btn">Get person name from the group</button>
-        <p id="nameByFace-info"></p>
-      </div>
-    </div>
-
-    <hr>
-
-    <video class="vividli-webcam-video" id="video"></video>
-    <canvas id="canvas" style="display:none;"></canvas>
-    <div id="buttoncontent">
-
-    </div>
-    <div id="photo">
-
-    </div>
-    <button id="startbutton">CAPTURE</button>
-
-
   </div>
+
 
 
   <footer>
@@ -125,29 +143,47 @@
     crossorigin="anonymous"></script>
   <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
   <script src="./dist/js/ie10-viewport-bug-workaround.js"></script>
-  <script src="./dist/js/app.js"></script>
+  <script src="./dist/js/jquery.avgrund.min.js"></script>
   <script src="./dist/js/camera.js"></script>
   <script src="./dist/js/imgurClient.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
-
+  <script src="./dist/js/cookie.js"></script>
+  <script src="./dist/js/app.js"></script>
 
 
   <script>
+    if (readCookie("vividli-face") === null) {
+      window.location.href = window.location.href + '/login.html'
+    }
     $('#group').click(function () {
-      var resp = getGroup(17171717, function (response) {
-        $('#group-info').text(JSON.stringify(response));
-      });
+      if ($(this).text() === "Group") {
+        var resp = getGroup(17171717, function (response) {
+          Object.entries(response).forEach(
+            ([key, value]) => $('#group-info').append(`<li><b>${key}</b>: ${value}</li>`));
+          $('#group').text("Hide");
+        });
+      }
+      else {
+        $('#group-info').empty();
+        $(this).text("Group");
+      }
     });
 
-    $('#personsInGroup').click(function () {
-      $.when(getPersons()).then(function (users) {
-        users.map((x => $('#personsInGroup-list').append(`<li>${x.name} with personId ${x.personId}</li>`)))
-        console.log(users);
-      });
+    $('#people-in-group').click(function () {
+      if ($(this).text() === "People in the group") {
+        $.when(getPersons()).then(function (users) {
+          users.map((x => $('#people-in-group-info').append(`<li><b>${x.name}</b> with personId ${x.personId}</li>`)))
+          $('#people-in-group').text("Hide");
+        });
+      }
+      else{
+         $('#people-in-group-info').empty();
+        $(this).text("People in the group");
+      }
     });
 
     $('#addFace').click(function () {
-      addPersonFace(gaboId,response => {
+      addPersonFace(gaboId, response => {
         $("#addFace-info").text(JSON.stringify(response));
       });
     })

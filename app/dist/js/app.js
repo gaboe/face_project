@@ -28,7 +28,16 @@ makeblob = function (dataURL) {
     return new Blob([uInt8Array], { type: contentType });
 }
 
-
+function getPersonByPersonId(personId, callback = function () { }, groupID = vividliGroupId) {
+    return $.ajax({
+        url: `${apiUrl}/persongroups/${groupId}/persons/${personId}`,
+        beforeSend: function (xhrObj) {
+            xhrObj.setRequestHeader("Content-Type", "application/json");
+            xhrObj.setRequestHeader("Ocp-Apim-Subscription-Key", apiKey);
+        },
+        type: "GET"
+    }).always((response) => callback(response));
+}
 function createPerson(person, callback = function () { }, groupId = vividliGroupId) {
     return $.ajax({
         url: `${apiUrl}/persongroups/${groupId}/persons`,
@@ -189,4 +198,22 @@ function CallAPI(file, apiUrl, apiKey) {
 function ProcessResult(response) {
     return response;
     //$("#response").text(data);
-}   
+}
+
+$('head').avgrund({
+    height: 200,
+    holderClass: 'custom',
+    showClose: true,
+    showCloseText: '.',
+    enableStackAnimation: true,
+    onBlurContainer: '.container',
+    template: `<div class="super-center">
+                        <div class="sk-folding-cube">
+                            <div class="sk-cube1 sk-cube"></div>
+                            <div class="sk-cube2 sk-cube"></div>
+                            <div class="sk-cube4 sk-cube"></div>
+                            <div class="sk-cube3 sk-cube"></div>
+                         </div>
+                        <span class="loading words"></span>
+                       </div>`,
+});
