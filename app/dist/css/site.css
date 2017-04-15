@@ -91,7 +91,6 @@
     transform: perspective(140px) rotateY(180deg);
     opacity: 0; } }
 
-/* Move down content because we have a fixed navbar that is 50px tall */
 body {
   padding-top: 2rem; }
 
@@ -110,4 +109,14 @@ body {
   left: 0;
   padding: 1rem;
   background-color: #efefef;
+  text-align: center; }
+
+.api-questions {
+  margin-bottom: 100px; }
+
+.login-jumbotron {
+  padding-top: 30px;
+  padding-bottom: 10px; }
+
+.h-center {
   text-align: center; }
