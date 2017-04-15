@@ -9,21 +9,12 @@
     <link rel="icon" href="../../favicon.ico">
 
     <title>Vividli face recognition app</title>
-
-    <!--<link rel="stylesheet" href="./dist/css/bootstrap.css">
-    <link href="./dist/css/site.css" rel="stylesheet">
-    <link href="./dist/css/sweetalert.css" rel="stylesheet">
-    <link rel="stylesheet" href="./dist/css/avgrund.css">
-    -->
-    <link rel="stylesheet" href="./dist/css/bundle.min.css">
+    
+    <link rel="stylesheet" href="./dist/css/bundle.css">
     <link rel="stylesheet" href="http://tawian.io/text-spinners/spinners.css">
-    
-    
-    
 </head>
 
 <body>
-
     <nav class="navbar navbar-toggleable-md navbar-inverse fixed-top bg-inverse">
         <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault"
             aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
@@ -46,7 +37,6 @@
         </div>
     </nav>
 
-    <!-- Main jumbotron for a primary marketing message or call to action -->
     <div class="jumbotron login-jumbotron">
         <div class="container">
             <h1 class="display-3">Hello there!</h1>
@@ -78,41 +68,29 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb"
         crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
-   
-   
-    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-    <!--<script src="./dist/js/ie10-viewport-bug-workaround.js"></script>
-    <script src="./dist/js/camera.js"></script>
-    <script src="./dist/js/imgurClient.js"></script>
-    <script src="./dist/js/sweetalert.min.js"></script>
-    <script src="./dist/js/cookie.js"></script>
-    <script src="./dist/js/jquery.avgrund.min.js"></script>
-    <script src="./dist/js/app.js"></script>-->
 
     <script src="./dist/js/bundle.min.js"></script>
-    <!--<script src="./dist/js/bundle.js"></script>-->
-    
-    
 
     <script>
         $("#startbutton").click(function () {
 
-            $('head').trigger('click');
+            modalEffectStart();
             $.when(getPersonId(function (response) {
-                $(".avgrund-close").trigger("click");
+                modalEffectEnd();
 
                 if (response === 0) {
                     return swal("Cancelled", "We cannot recognize anyone on photo, please try again", "error");
                 }
                 if (response[0].candidates.length === 0) {
                     swal({
-                        title: "Looks like you are newby, here!",
-                        text: "So, write your nickname and you can be identified",
+                        title: "Looks like you have never been here!",
+                        text: "So, write your nickname and you can be identified next time",
                         type: "input",
                         showCancelButton: true,
                         closeOnConfirm: false,
                         animation: "slide-from-top",
-                        inputPlaceholder: "Your nickname"
+                        inputPlaceholder: "Your nickname",
+                        showLoaderOnConfirm: true,
                     },
                         function (inputValue) {
                             if (inputValue === false) return false;
@@ -121,11 +99,18 @@
                                 swal.showInputError("You need to write your nickname!");
                                 return false;
                             }
+                            modalEffectStart();
                             return createPerson({ name: inputValue, userData: new Date().toDateString() }, (response) => {
                                 if (response.personId !== undefined) {
                                     addPersonFace(response.personId, (addPersonFaceResponse) => {
+                                        modalEffectEnd();
                                         if (addPersonFaceResponse.persistedFaceId !== undefined) {
-                                            swal("Face has been added!", `Welcome on board ${inputValue}`, "success");
+
+                                            swal({ title: "Face has been added!", text: `Welcome on board ${inputValue}`, type: "success" },
+                                                function () {
+                                                    url = window.location.href;
+                                                    window.location.href = url.replace('/login.html', ' ');
+                                                });
                                         }
                                         else
                                             return swal("Cancelled", "Ooops something went wrong, please try again", "error");

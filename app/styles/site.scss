@@ -1,6 +1,11 @@
 .vividli-webcam-video {
     width: 600px;
-    height: 450px;
+    height: 400px;
+}
+
+.vividli-webcam-video-index {
+    width: 500px;
+    height: 370px;
 }
 
 .video-container{
@@ -118,7 +123,7 @@ body {
   right: 0;
   bottom: 0;
   left: 0;
-  padding: 1rem;
+  padding: 0.2rem;
   background-color: #efefef;
   text-align: center;
 }
@@ -134,4 +139,30 @@ body {
 
 .h-center {
   text-align: center;
+}
+
+.row-with-btn{
+  margin-bottom: 20px;
+}
+
+.ai-text-data{
+  font-size: 30px;
+}
+
+button:hover{
+  cursor: pointer;
+}
+
+@media screen and (min-width: 1700px){
+  .vividli-webcam-video {
+    width: 850px;
+    height: 600px;
+}
+}
+
+@media screen and (min-width: 1700px){
+  .vividli-webcam-video-index {
+    width: 690px;
+    height: 520px;
+}
 }

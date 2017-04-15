@@ -10,11 +10,10 @@
 
   <title>Vividli face recognition app</title>
 
-  <!-- Bootstrap core CSS -->
-  <link rel="stylesheet" href="./dist/css/bootstrap.css">
-  <!-- Custom styles for this template -->
-  <link href="./dist/css/site.css" rel="stylesheet">
-  <link rel="stylesheet" href="./dist/css/avgrund.css">
+  <link rel="stylesheet" href="./dist/css/bundle.css">
+  <link rel="stylesheet" href="http://tawian.io/text-spinners/spinners.css">
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN"
+    crossorigin="anonymous">
 
 </head>
 
@@ -42,11 +41,12 @@
     </div>
   </nav>
 
-  <!-- Main jumbotron for a primary marketing message or call to action -->
-  <div class="jumbotron">
+  <div class="jumbotron login-jumbotron">
     <div class="container">
       <h1 class="display-3">Let's have fun!</h1>
       <p>After you are logged in you can have fun with implemented api features. There will be other features after time.</p>
+      <br>
+      <p>You should look at the camera on functions, where is camera displayed on button</p>
     </div>
   </div>
 
@@ -55,7 +55,7 @@
 
       <div class="video-container">
         <div class="row">
-          <video class="vividli-webcam-video" id="video"></video>
+          <video class="vividli-webcam-video-index" id="video"></video>
           <canvas id="canvas" style="display:none;"></canvas>
           <div id="buttoncontent">
           </div>
@@ -66,12 +66,21 @@
       </div>
 
       <div class="api-questions container offset-4">
+
+        <div class="row">
+          <h4>AI can tell some info about your face</h4>
+        </div>
+        <ul id="get-face-info"></ul>
+        <div class="row row-with-btn">
+          <button type="button" class="btn btn-primary">
+            <i id="get-face" class="fa fa-camera face-api-btn" aria-hidden="true">    I want to see info about my face</i>   </button></button>
+        </div>
+
         <div class="row">
           <h4>Click on the button to see group info</h4>
         </div>
         <ul id="group-info"></ul>
-
-        <div class="row">
+        <div class="row row-with-btn">
           <button id="group" type="button" class="btn btn-sm btn-primary">Group</button>
         </div>
 
@@ -81,7 +90,7 @@
         </div>
         <ul id="people-in-group-info"></ul>
 
-        <div class="row">
+        <div class="row row-with-btn">
           <button id="people-in-group" type="button" class="btn btn-sm btn-primary">People in the group</button>
         </div>
 
@@ -90,7 +99,7 @@
         </div>
         <ul id="my-photos-info"></ul>
 
-        <div class="row">
+        <div class="row row-with-btn">
           <button id="my-photos" type="button" class="btn btn-sm btn-primary">Show them</button>
         </div>
 
@@ -99,7 +108,7 @@
         </div>
         <ul id="add-face-info"></ul>
 
-        <div class="row">
+        <div class="row row-with-btn">
           <button type="button" class="btn btn-sm btn-primary "> 
             <i  id="add-face" class="fa fa-camera face-api-btn" aria-hidden="true">    Add face</i>   </button>
         </div>
@@ -109,7 +118,7 @@
         </div>
         <p id="get-faceId-info"></p>
 
-        <div class="row">
+        <div class="row row-with-btn">
           <button type="button" class="btn btn-sm btn-primary "> 
             <i  id="get-faceId" class="fa fa-camera face-api-btn" aria-hidden="true">    Get faceId</i>   </button>
         </div>
@@ -119,7 +128,7 @@
         </div>
         <p id="get-personId-info"></p>
 
-        <div class="row">
+        <div class="row row-with-btn">
           <button type="button" class="btn btn-sm btn-primary "> 
             <i  id="get-personId" class="fa fa-camera face-api-btn" aria-hidden="true">    Get personId</i>   </button>
         </div>
@@ -142,22 +151,39 @@
   </script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb"
     crossorigin="anonymous"></script>
-  <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-  <script src="./dist/js/ie10-viewport-bug-workaround.js"></script>
-  <script src="./dist/js/jquery.avgrund.min.js"></script>
-  <script src="./dist/js/camera.js"></script>
-  <script src="./dist/js/imgurClient.js"></script>
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
-  <script src="./dist/js/cookie.js"></script>
-  <script src="./dist/js/app.js"></script>
-  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN"
-    crossorigin="anonymous">
-  <link rel="stylesheet" href="http://tawian.io/text-spinners/spinners.css">
+
+  <script src="./dist/js/bundle.min.js"></script>
 
   <script>
     if (readCookie("vividli-face") === null) {
       window.location.href = window.location.href + '/login.html'
     }
+
+    $('#get-face').parent('button').click(function () {
+      if ($('#get-face') === "    I want to see info about my face") {
+        $("#get-face-info").append('<span class="loading dots2"></span>');
+        getFaceId(response => {
+          $('#get-face-info').empty();
+          const attr = response[0].faceAttributes;
+          const answer = `<p>Artificial intelligence ansvered, it said you are <b class="ai-text-data">${attr.age} years old ${attr.gender}</b>,
+                          who is <b class="ai-text-data">smiling at ${attr.smile * 100}% </b>, and wear glasses -
+                           <b class="ai-text-data">${attr.glasses}</b> </p> </br>
+                          <p> AI Also said that your facial hair is:<b class="ai-text-data"><ul> <li> mustache on ${attr.facialHair.mustache * 100}%</li> <li>beard on
+                           ${attr.facialHair.beard * 100}% </li> <li> sideburns on ${attr.facialHair.sideburns * 100}%</li> </ul> </b>
+                           - but this facial hair data are experimental, you do not have to take them seriously </p>`;
+          $('#get-face-info').append(answer);
+          $(this).text("   Hide");
+
+        });
+      }
+      else {
+        $('#get-face-info').empty();
+        $(this).text("    I want to see info about my face");
+      }
+    })
+
 
     $('#my-photos').click(function () {
       if ($(this).text() === "Show them") {
@@ -202,11 +228,11 @@
 
     $('#add-face').click(function () {
       if ($(this).text() === "    Add face") {
-        $('head').trigger('click');
+        $("#add-face-info").append('<span class="loading dots2"></span>');
         addPersonFace(gaboId, response => {
+          $("#add-face-info").empty();
           $("#add-face-info").text(`FaceId: ${response.persistedFaceId}`);
           $('#add-face').text("   Hide");
-          $(".avgrund-close").trigger("click");
         });
       }
       else {
@@ -217,17 +243,15 @@
 
     $('#get-faceId').click(function () {
       if ($(this).text() === "    Get faceId") {
-        modalEffectStart();
+        $("#get-faceId-info").append('<span class="loading dots2"></span>');
         getFaceId(response => {
           try {
-            $("#get-faceId-info").text(`faceId: ${data[0].faceId}`);
+            $("#get-faceId-info").text(`faceId: ${response[0].faceId}`);
             $('#get-faceId').text("   Hide");
-            modalEffectEnd();
           }
           catch (e) {
             $("#get-faceId-info").text(`Error occured because somebody was not looking at the camera`);
             $('#get-faceId').text("   Hide");
-            modalEffectEnd();
           }
         });
       }
@@ -239,24 +263,22 @@
 
     $('#get-personId').click(function () {
       if ($(this).text() === "    Get personId") {
-        modalEffectStart();
+        $("#get-personId-info").append('<span class="loading dots2"></span>');
         getPersonId((function (data) {
           try {
             $('#get-personId-info').empty().append(`personId: ${data[0].candidates[0].personId}
             \n with confidence: ${data[0].candidates[0].confidence}
           faceId: ${data[0].faceId}`);
-            modalEffectEnd();
-
+            $('#get-personId').text("   Hide");
           }
           catch (e) {
             $("#get-personId-info").text(`Error occured because somebody was not looking at the camera`);
             $('#get-personId').text("   Hide");
-            modalEffectEnd();
           }
         }));
       }
       else {
-        $('#get-faceId-info').empty();
+        $('#get-personId-info').empty();
         $(this).text("    Get personId");
       }
     })
@@ -280,8 +302,6 @@
         $('#nameByFace-info').empty().append(`${person.name}`);
       }))
     });
-
-
   </script>
 </body>
 

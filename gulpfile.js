@@ -57,7 +57,7 @@ gulp.task('css', function (cb) {
   return gulp.src(styles)
     .pipe(sass({
       //includePaths: [config.bootstrapDir + '/assets/stylesheets'],
-    }))
+    })).pipe(concat('bundle.css'))
     .pipe(gulp.dest('./app/dist/css'));
 });
 
@@ -82,11 +82,11 @@ gulp.task('html', function () {
 });
 
 gulp.task('watch', function () {
-  gulp.watch(['./app/*.html', './app/*.js', './app/js/*.js',], ['html', 'js']);
+  gulp.watch(['./app/*.html', './app/*.js', './app/js/*.js'], ['html', 'js','minify-js']);
 });
 
 gulp.task('watch-styles', function () {
-  gulp.watch(['./app/styles/*.scss',], ['css']);
+  gulp.watch(['./app/styles/*.scss',], ['css','minify-css']);
 });
 
 gulp.task('default', ['connect', 'watch', 'watch-styles']);

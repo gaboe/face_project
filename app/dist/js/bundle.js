@@ -254,12 +254,13 @@ function getPersonId(callback = function () { }, groupId = vividliGroupId) {
     })
 
 }
-function getFaceId(callback = function () { }, returnFaceId = true, returnFaceLandmarks = true) {
+function getFaceId(callback = function () { }, returnFaceId = true, returnFaceLandmarks = true,
+    returnFaceAttributes = ['age', 'gender', 'headPose', 'smile', 'facialHair', 'glasses', 'emotion']) {
     return $.when(postToImgur()).then(function (response) {
         var photoUrl = response.data.link;
         var photoId = response.data.deletehash;
         $.ajax({
-            url: `${apiUrl}/detect?returnFaceId=${returnFaceId}&returnFaceLandmarks=${returnFaceLandmarks}`,
+            url: `${apiUrl}/detect?returnFaceId=${returnFaceId}&returnFaceLandmarks=${returnFaceLandmarks}&returnFaceAttributes=${returnFaceAttributes.toString()}`,
             beforeSend: function (xhrObj) {
                 xhrObj.setRequestHeader("Content-Type", "application/json");
                 xhrObj.setRequestHeader("Ocp-Apim-Subscription-Key", apiKey);
@@ -320,29 +321,6 @@ function getGroup(groupID, callback) {
         .fail(function (error) {
             return callback(error);
         });
-}
-function CallAPI(file, apiUrl, apiKey) {
-    $.ajax({
-        url: apiUrl,
-        beforeSend: function (xhrObj) {
-            xhrObj.setRequestHeader("Content-Type", "application/octet-stream");
-            xhrObj.setRequestHeader("Ocp-Apim-Subscription-Key", apiKey);
-        },
-        type: "POST",
-        data: file,
-        processData: false
-    })
-        .done(function (response) {
-            ProcessResult(response);
-        })
-        .fail(function (error) {
-            $("#response").text(error.getAllResponseHeaders());
-        });
-}
-
-function ProcessResult(response) {
-    return response;
-    //$("#response").text(data);
 }
 
 $('head').avgrund({
