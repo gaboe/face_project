@@ -28,6 +28,22 @@ makeblob = function (dataURL) {
     return new Blob([uInt8Array], { type: contentType });
 }
 
+
+function createPerson(person, callback = function () { }, groupId = vividliGroupId) {
+    return $.ajax({
+        url: `${apiUrl}/persongroups/${groupId}/persons`,
+        beforeSend: function (xhrObj) {
+            xhrObj.setRequestHeader("Content-Type", "application/json");
+            xhrObj.setRequestHeader("Ocp-Apim-Subscription-Key", apiKey);
+        },
+        data: JSON.stringify({
+            name: person.name,
+            userData: person.userData | ""
+        }),
+        type: "POST"
+    }).always((response) => callback(response));
+}
+
 function isPersonInGroup(personId, callback = function () { }, groupId = vividliGroupId) {
     getPersons(persons => {
         callback(_.findWhere(persons, { personId: personId }));
@@ -84,26 +100,6 @@ function getPersonId(callback = function () { }, groupId = vividliGroupId) {
     })
 
 }
-
-function getFaceId(callback = function () { }, groupId = vividliGroupId) {
-    return $.when(postToImgur()).then(function (response) {
-
-        $.ajax({
-            url: `${apiUrl}/detect?returnFaceId=${returnFaceId}&returnFaceLandmarks=${returnFaceLandmarks}`,
-            beforeSend: function (xhrObj) {
-                xhrObj.setRequestHeader("Content-Type", "application/json");
-                xhrObj.setRequestHeader("Ocp-Apim-Subscription-Key", apiKey);
-            },
-            data: JSON.stringify({ url: photoUrl }),
-            type: "POST",
-        }).always(function (response) {
-            deleteFromImgur(photoId);
-            callback(response);
-        });
-    });
-}
-
-
 function getFaceId(callback = function () { }, returnFaceId = true, returnFaceLandmarks = true) {
     return $.when(postToImgur()).then(function (response) {
         var photoUrl = response.data.link;
@@ -123,9 +119,7 @@ function getFaceId(callback = function () { }, returnFaceId = true, returnFaceLa
     });
 }
 
-function addPersonFace(personId, groupId = vividliGroupId) {
-    // let blob = ($('#photo').attr('src')).replace(/^data:image\/(png|jpg);base64,/, "");//makeblob($('#photo').attr('src'));
-    //'http://www.thewrap.com/wp-content/uploads/2015/11/Donald-Trump.jpg';
+function addPersonFace(personId, callback = function () { }, groupId = vividliGroupId) {
     $.when(postToImgur()).then(function (response) {
         var photoUrl = response.data.link;
         var photoId = response.data.deletehash;
@@ -137,12 +131,9 @@ function addPersonFace(personId, groupId = vividliGroupId) {
             },
             data: JSON.stringify({ url: photoUrl }),
             type: "POST",
-        }).done(function (response) {
-            $("#face-add-info").text(response);
-        }).fail(function (error) {
-            $("#face-add-info").text(JSON.stringify(error));
-        }).always(function () {
+        }).always(function (response) {
             deleteFromImgur(photoId);
+            callback(response);
         });
     });
 }

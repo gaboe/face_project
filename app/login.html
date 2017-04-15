@@ -87,10 +87,10 @@
 
     <script>
         $("#startbutton").click(function () {
-            if($(this).attr("text") === "CAPTURE") return;
+            if ($(this).text() === "CAPTURE") return;
             $.when(getPersonId(function (response) {
                 if (response === 0) {
-                   return swal("Cancelled", "We cannot recognize anyone on photo, please try again", "error");
+                    return swal("Cancelled", "We cannot recognize anyone on photo, please try again", "error");
                 }
                 if (response[0].candidates.length === 0) {
                     swal({
@@ -109,14 +109,31 @@
                                 swal.showInputError("You need to write your nickname!");
                                 return false
                             }
-                            swal("Nice!", "You wrote: " + inputValue, "success");
+                            return createPerson({ name: inputValue, userData: new Date().toDateString() }, (response) => {
+                                if (response.personId !== undefined) {
+                                    addPersonFace(response.personId, (addPersonFaceResponse) => {
+                                        if (addPersonFaceResponse.persistedFaceId !== undefined) {
+                                            swal("Face has been added!", `Welcome on board ${inputValue}`, "success");
+                                        }
+                                        else
+                                            return swal("Cancelled", "Ooops something went wrong, please try again", "error");
+                                    })
+                                }
+                                else {
+                                    return swal("Cancelled", "Ooops something went wrong, please try again", "error");
+                                }
+                            })
                         });
                 }
+                else if (response[0].candidates[0].personId != undefined) {
+                    isPersonInGroup(response[0].candidates[0].personId, (person) => {
+                        if (person !== undefined) {
+                            swal("Face has been recognized!", `And belongs to ... ${person.name}`, "success");
+                        }
+                    })
+                }
 
-                // if(isPersonInGroup(response[0].candidates[0])) 
             }));
-
-
         })
     </script>
 </body>

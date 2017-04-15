@@ -68,7 +68,7 @@
 
       <div class="col">
         <button id="addFace" type="button" class="btn btn-primary face-api-btn">AddFace</button>
-        <p id="face-add-info"></p>
+        <p id="addFace-info"></p>
       </div>
 
       <div class="col">
@@ -147,7 +147,9 @@
     });
 
     $('#addFace').click(function () {
-      addPersonFace(gaboId);
+      addPersonFace(gaboId,response => {
+        $("#addFace-info").text(JSON.stringify(response));
+      });
     })
 
     $('#faceId').click(function () {
