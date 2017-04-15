@@ -5,7 +5,9 @@ var browserify = require('gulp-browserify');
 var uglify = require('gulp-uglify');
 var pump = require('pump');
 var concat = require('gulp-concat');
-
+var babel = require('gulp-babel');
+var cleanCSS = require('gulp-clean-css');
+var sourcemaps = require('gulp-sourcemaps');
 
 var bower_base = './bower_components/';
 
@@ -26,20 +28,32 @@ var styles = [
 ]
 
 
-gulp.task('compress', function (cb) {
+gulp.task('minify-css', function (cb) {
+  pump([
+    gulp.src(styles),
+    sass(),
+    concat('bundle.min.css'),
+    sourcemaps.init(),
+    cleanCSS(),
+    sourcemaps.write(),
+    gulp.dest('./app/dist/css')
+  ]),
+    cb
+});
+
+gulp.task('minify-js', function (cb) {
   pump([
     gulp.src(scripts),
-    uglify(), babel({
-      presets: ['es2015']
-    }),
-    concat('all.js'),
+    babel({ presets: ['es2015'] }),
+    concat('bundle.min.js'),
+    uglify(),
     gulp.dest('./app/dist/js')
   ],
     cb
   );
 });
 
-gulp.task('css', function () {
+gulp.task('css', function (cb) {
   return gulp.src(styles)
     .pipe(sass({
       //includePaths: [config.bootstrapDir + '/assets/stylesheets'],
@@ -51,6 +65,7 @@ gulp.task('css', function () {
 gulp.task('js', function () {
   return gulp.src(
     scripts)
+    .pipe(concat('bundle.js'))
     .pipe(gulp.dest('./app/dist/js'));
 });
 
@@ -76,9 +91,4 @@ gulp.task('watch-styles', function () {
 
 gulp.task('default', ['connect', 'watch', 'watch-styles']);
 
-gulp.task('bundle', function () {
-  return browserify({ entries: scripts })
-    .bundle()
-    .pipe(source('bundle.js'))
-    .pipe(gulp.dest('dist/js'));
-});
+gulp.task('bundle',['minify-js','minify-css'] );
