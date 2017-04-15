@@ -165,7 +165,7 @@
     })
 
     $('#nameByFace').click(function () {
-      getPersonName((function (person) {
+      getPerson((function (person) {
         $('#nameByFace-info').empty().append(`${person.name}`);
       }))
     })

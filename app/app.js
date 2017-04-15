@@ -28,14 +28,26 @@ makeblob = function (dataURL) {
     return new Blob([uInt8Array], { type: contentType });
 }
 
-function getPersonName(callback = function () { }, groupId = vividliGroupId) {
+function isPersonInGroup(personId, callback = function () { }, groupId = vividliGroupId) {
+    getPersons(persons => {
+        callback(_.findWhere(persons, { personId: personId }));
+    }, groupId);
+}
+
+function getPerson(callback = function () { }, groupId = vividliGroupId) {
     getPersons(persons => {
         getPersonId(personIdData => {
+            if (personIdData === 0) return callback({
+                name: 'We have not found nobody with this face',
+                personId: 0
+            });
+
             callback(_.findWhere(persons, { personId: personIdData[0].candidates[0].personId }));
         });
     });
 }
 
+//runs function which will make face in group recognizable
 function trainGroup(callback = function () { }, groupId = vividliGroupId) {
     return $.ajax({
         url: `${apiUrl}/persongroups/${groupId}/train`,
@@ -51,6 +63,8 @@ function trainGroup(callback = function () { }, groupId = vividliGroupId) {
 function getPersonId(callback = function () { }, groupId = vividliGroupId) {
     trainGroup(() => {
         getFaceId((function (data) {
+            if (data[0] === undefined)
+                return callback(0);
             const faceId = data[0].faceId;
             return $.ajax({
                 url: `${apiUrl}/identify`,

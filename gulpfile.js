@@ -10,10 +10,11 @@ var scripts = [
   bower_base + 'jquery/dist/jquery.min.map',
   './app/app.js',
   './app/js/*.js',
+  bower_base + 'sweetalert/dist/sweetalert.min.js'
 ];
 
 gulp.task('css', function () {
-  return gulp.src(['./bower_components/bootstrap/scss/*.scss', './app/styles/site.scss'])
+  return gulp.src(['./bower_components/bootstrap/scss/*.scss', './app/styles/site.scss', bower_base + 'sweetalert/dist/sweetalert.css'])
     .pipe(sass({
       //includePaths: [config.bootstrapDir + '/assets/stylesheets'],
     }))
@@ -47,7 +48,7 @@ gulp.task('watch-styles', function () {
   gulp.watch(['./app/styles/*.scss',], ['css']);
 });
 
-gulp.task('default', ['connect', 'watch','watch-styles']);
+gulp.task('default', ['connect', 'watch', 'watch-styles']);
 
 gulp.task('bundle', function () {
   return browserify({ entries: scripts })

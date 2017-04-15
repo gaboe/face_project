@@ -6,8 +6,8 @@
     buttoncontent = document.querySelector('#buttoncontent'),
     photo = document.querySelector('#photo'),
     startbutton = document.querySelector('#startbutton'),
-    width = 320,
-    height = 0;
+    width = 600,
+    height = 450;
 
   navigator.getMedia = (navigator.getUserMedia ||
     navigator.webkitGetUserMedia ||
@@ -34,7 +34,7 @@
 
   video.addEventListener('canplay', function (ev) {
     if (!streaming) {
-      height = video.videoHeight / (video.videoWidth / width);
+      // height = video.videoHeight / (video.videoWidth / width);
       video.setAttribute('width', width);
       video.setAttribute('height', height);
       canvas.setAttribute('width', width);

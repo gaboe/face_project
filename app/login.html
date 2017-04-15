@@ -15,6 +15,7 @@
     <!-- Custom styles for this template -->
     <link href="./dist/css/jumbotron.css" rel="stylesheet">
     <link href="./dist/css/site.css" rel="stylesheet">
+    <link href="./dist/css/sweetalert.css" rel="stylesheet">
 
 </head>
 
@@ -54,22 +55,16 @@
         </div>
     </div>
     <div class="container col-auto">
-        <hr>
 
         <div class="offset-md-4">
-            <video class="vividli-webcam-video" id="video"></video>
-            <canvas id="canvas" style="display:none;"></canvas>
-            <div id="buttoncontent"> </div>
-            <div id="photo"> </div>
-            <hr>
-            <div class="row offset-md-2">
-                <input id="nickname-input" class="wide-input" type="text" placeholder="Inser your nickname">
+            <div class="container">
+                <video class="vividli-webcam-video" id="video"></video>
+                <canvas id="canvas" style="display:none;"></canvas>
+                <div id="buttoncontent"> </div>
+                <div id="photo"> </div>
+                <button class="btn btn-success offset-md-3" id="startbutton">CAPTURE</button>
             </div>
-            <hr>
-            <button class="btn btn-success offset-md-3" id="startbutton">CAPTURE</button>
-
         </div>
-
     </div>
     <footer>
         <p>&copy; Gabriel Ečegi 2017</p>
@@ -88,22 +83,41 @@
     <script src="./dist/js/camera.js"></script>
     <script src="./dist/js/imgurClient.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+    <script src="./dist/js/sweetalert.min.js"></script>
 
     <script>
-        $(document).on('ready', function () {
-            $("#nickname-input").on('click', (function () {
-                console.log('sadas');
-                if ($(this).val() === "") {
-                    $("#startbutton").attr("disabled", "disabled");
+        $("#startbutton").click(function () {
+            if($(this).attr("text") === "CAPTURE") return;
+            $.when(getPersonId(function (response) {
+                if (response === 0) {
+                   return swal("Cancelled", "We cannot recognize anyone on photo, please try again", "error");
                 }
+                if (response[0].candidates.length === 0) {
+                    swal({
+                        title: "Looks like you are newby, here!",
+                        text: "So, write your nickname and you can be identified",
+                        type: "input",
+                        showCancelButton: true,
+                        closeOnConfirm: false,
+                        animation: "slide-from-top",
+                        inputPlaceholder: "Your nickname"
+                    },
+                        function (inputValue) {
+                            if (inputValue === false) return false;
+
+                            if (inputValue === "") {
+                                swal.showInputError("You need to write your nickname!");
+                                return false
+                            }
+                            swal("Nice!", "You wrote: " + inputValue, "success");
+                        });
+                }
+
+                // if(isPersonInGroup(response[0].candidates[0]))
             }));
 
-            $("#nickname-input").change(function () {
-                if ($(this).val() === "") {
-                    $("#startbutton").attr("disabled", "disabled");
-                }
-            });
-        });
+
+        })
     </script>
 </body>
 
