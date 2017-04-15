@@ -2,21 +2,45 @@ var sass = require('gulp-sass');
 var gulp = require('gulp');
 var connect = require('gulp-connect');
 var browserify = require('gulp-browserify');
+var uglify = require('gulp-uglify');
+var pump = require('pump');
+var concat = require('gulp-concat');
+
 
 var bower_base = './bower_components/';
 
 var scripts = [
   bower_base + 'jquery/dist/jquery.min.js',
-  bower_base + 'jquery/dist/jquery.min.map',
-  './app/app.js',
-  './app/js/*.js',
+  // bower_base + 'jquery/dist/jquery.min.map',
   bower_base + 'sweetalert/dist/sweetalert.min.js',
   './bower_components/jquery.avgrund/jquery.avgrund.min.js',
-
+  './app/js/*.js',
+  './app/app.js',
 ];
 
+var styles = [
+  './bower_components/bootstrap/scss/*.scss',
+  './app/styles/site.scss',
+  bower_base + 'sweetalert/dist/sweetalert.css',
+  bower_base + 'jquery.avgrund/style/avgrund.css'
+]
+
+
+gulp.task('compress', function (cb) {
+  pump([
+    gulp.src(scripts),
+    uglify(), babel({
+      presets: ['es2015']
+    }),
+    concat('all.js'),
+    gulp.dest('./app/dist/js')
+  ],
+    cb
+  );
+});
+
 gulp.task('css', function () {
-  return gulp.src(['./bower_components/bootstrap/scss/*.scss', './app/styles/site.scss', bower_base + 'sweetalert/dist/sweetalert.css', bower_base + 'jquery.avgrund/style/avgrund.css'])
+  return gulp.src(styles)
     .pipe(sass({
       //includePaths: [config.bootstrapDir + '/assets/stylesheets'],
     }))
