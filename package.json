@@ -16,6 +16,7 @@
     "gulp-uglify": "^2.1.2"
   },
   "dependencies": {
-    "fullcontact": "^1.0.0"
+    "fullcontact": "^1.0.0",
+    "text-spinners": "^1.0.5"
   }
 }

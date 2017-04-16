@@ -1,12 +1,4 @@
-.vividli-webcam-video {
-    width: 600px;
-    height: 400px;
-}
 
-.vividli-webcam-video-index {
-    width: 500px;
-    height: 370px;
-}
 
 .video-container{
       z-index: 10; 
@@ -153,10 +145,34 @@ button:hover{
   cursor: pointer;
 }
 
+.vividli-webcam-video {
+    width: 430px;
+    height: 320px;
+}
+
+@media screen and (min-width: 1200px){
+  .vividli-webcam-video {
+    width: 600px;
+    height: 400px;
+}
+}
+
 @media screen and (min-width: 1700px){
   .vividli-webcam-video {
     width: 850px;
     height: 600px;
+}
+}
+
+.vividli-webcam-video-index {
+    width: 350px;
+    height: 260px;
+}
+
+@media screen and (min-width: 1300px){
+  .vividli-webcam-video-index {
+    width: 500px;
+    height: 370px;
 }
 }
 
@@ -165,4 +181,9 @@ button:hover{
     width: 690px;
     height: 520px;
 }
+}
+
+.centered-loading{
+  text-align: center;
+  margin-left: 150px;
 }

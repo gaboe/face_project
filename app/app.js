@@ -1,6 +1,5 @@
 const apiKey = "18923e2aa30b426eb624bd4b47f26034";
 const vividliGroupId = 17;
-const gaboId = '9a6ac3ab-ec6a-4025-b1e1-533c833f30cd';
 var apiUrl = "https://westus.api.cognitive.microsoft.com/face/v1.0";
 
 
@@ -59,7 +58,7 @@ function trainGroup(callback = function () { }, groupId = vividliGroupId) {
             xhrObj.setRequestHeader("Ocp-Apim-Subscription-Key", apiKey);
         },
         type: "POST"
-    }).always(() => callback());
+    }).always((response) => callback(response));
 }
 
 
@@ -170,7 +169,7 @@ $('head').avgrund({
                             <div class="sk-cube4 sk-cube"></div>
                             <div class="sk-cube3 sk-cube"></div>
                          </div>
-                        <span class="loading words"></span>
+                        <span class="loading words centered-loading"></span>
                        </div>`,
 });
 

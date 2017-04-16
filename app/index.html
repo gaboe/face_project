@@ -11,7 +11,7 @@
   <title>Vividli face recognition app</title>
 
   <link rel="stylesheet" href="./dist/css/bundle.min.css">
-  <link rel="stylesheet" href="http://tawian.io/text-spinners/spinners.css">
+  <!--<link rel="stylesheet" href="http://tawian.io/text-spinners/spinners.css">-->
   <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN"
     crossorigin="anonymous">
 
@@ -34,9 +34,6 @@
         <li class="nav-item">
           <a class="nav-link" href="/login.html">Login</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link disabled" href="#">Destroy world</a>
-        </li>
       </ul>
     </div>
   </nav>
@@ -52,16 +49,18 @@
 
   <div class="container">
     <div class="row">
+      <div class="row">
 
-      <div class="video-container">
-        <div class="row">
-          <video class="vividli-webcam-video-index" id="video"></video>
-          <canvas id="canvas" style="display:none;"></canvas>
-          <div id="buttoncontent">
+        <div class="video-container">
+          <div class="row">
+            <video class="vividli-webcam-video-index" id="video"></video>
+            <canvas id="canvas" style="display:none;"></canvas>
+            <div id="buttoncontent">
+            </div>
+            <div id="photo">
+            </div>
+            <button style="display:none" class="btn btn-success offset-md-8" id="startbutton">CAPTURE</button>
           </div>
-          <div id="photo">
-          </div>
-          <button style="display:none" class="btn btn-success offset-md-8" id="startbutton">CAPTURE</button>
         </div>
       </div>
 
@@ -154,7 +153,7 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
 
-  <script src="./dist/js/bundle.min.js"></script>
+    <script src="./dist/js/bundle.min.js"></script>
 
   <script>
     if (readCookie("vividli-face") === null) {
@@ -162,25 +161,33 @@
     }
 
     $('#get-face').parent('button').click(function () {
-      if ($('#get-face') === "    I want to see info about my face") {
+      if ($('#get-face').text() === "    I want to see info about my face") {
         $("#get-face-info").append('<span class="loading dots2"></span>');
         getFaceId(response => {
-          $('#get-face-info').empty();
-          const attr = response[0].faceAttributes;
-          const answer = `<p>Artificial intelligence ansvered, it said you are <b class="ai-text-data">${attr.age} years old ${attr.gender}</b>,
-                          who is <b class="ai-text-data">smiling at ${attr.smile * 100}% </b>, and wear glasses -
-                           <b class="ai-text-data">${attr.glasses}</b> </p> </br>
-                          <p> AI Also said that your facial hair is:<b class="ai-text-data"><ul> <li> mustache on ${attr.facialHair.mustache * 100}%</li> <li>beard on
-                           ${attr.facialHair.beard * 100}% </li> <li> sideburns on ${attr.facialHair.sideburns * 100}%</li> </ul> </b>
-                           - but this facial hair data are experimental, you do not have to take them seriously </p>`;
-          $('#get-face-info').append(answer);
-          $(this).text("   Hide");
 
+          try {
+
+            $('#get-face-info').empty();
+            const attr = response[0].faceAttributes;
+            const answer = `<p>Artificial intelligence ansvered, it said you are <b class="ai-text-data">${attr.age} years old ${attr.gender}</b>,
+                          who is <b class="ai-text-data">smiling at ${Math.round(attr.smile * 100)}% </b>, and wear glasses -
+                           <b class="ai-text-data">${attr.glasses}</b> </p> </br>
+                          <p> AI Also said that your facial hair is:<b class="ai-text-data"><ul> <li> mustache on ${Math.round(attr.facialHair.mustache * 100)}%</li> <li>beard on
+                           ${Math.round(attr.facialHair.beard * 100)}% </li> <li> sideburns on ${Math.round(attr.facialHair.sideburns * 100)}%</li> </ul> </b>
+                           - but this facial hair data are experimental, you do not have to take them seriously </p>`;
+            $('#get-face-info').append(answer);
+            $('#get-face').text("   Hide");
+          }
+          catch (e) {
+            $('#get-face-info').append(`Error occured because somebody was not looking at the camera`);
+            $('#get-face').text("   Hide");
+          }
         });
+
       }
       else {
         $('#get-face-info').empty();
-        $(this).text("    I want to see info about my face");
+        $('#get-face').text("    I want to see info about my face");
       }
     })
 
@@ -229,7 +236,8 @@
     $('#add-face').click(function () {
       if ($(this).text() === "    Add face") {
         $("#add-face-info").append('<span class="loading dots2"></span>');
-        addPersonFace(gaboId, response => {
+        personId = readCookie('vividli-face');
+        addPersonFace(personId, response => {
           $("#add-face-info").empty();
           $("#add-face-info").text(`FaceId: ${response.persistedFaceId}`);
           $('#add-face').text("   Hide");
@@ -267,7 +275,7 @@
         getPersonId((function (data) {
           try {
             $('#get-personId-info').empty().append(`personId: ${data[0].candidates[0].personId}
-            \n with confidence: ${data[0].candidates[0].confidence}
+            \n with <b>confidence: ${Math.round(data[0].candidates[0].confidence * 100)}%</b>
           faceId: ${data[0].faceId}`);
             $('#get-personId').text("   Hide");
           }
@@ -291,8 +299,8 @@
 
     $('#personIdByFace').click(function () {
       getPersonId((function (data) {
-        $('#personIdByFace-info').empty().append(`< p > personId: ${data[0].candidates[0].personId}
-            \n with confidence: ${data[0].candidates[0].confidence}
+        $('#personIdByFace-info').empty().append(`<p> personId: ${data[0].candidates[0].personId}
+            \n <b>with confidence: ${Math.round(data[0].candidates[0].confidence * 100)}</b>
           faceId: ${data[0].faceId} </p>`);
       }))
     })

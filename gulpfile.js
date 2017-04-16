@@ -24,7 +24,8 @@ var styles = [
   './bower_components/bootstrap/scss/*.scss',
   './app/styles/site.scss',
   bower_base + 'sweetalert/dist/sweetalert.css',
-  bower_base + 'jquery.avgrund/style/avgrund.css'
+  bower_base + 'jquery.avgrund/style/avgrund.css',
+  bower_base+ 'spinner/spinners.css'
 ]
 
 
