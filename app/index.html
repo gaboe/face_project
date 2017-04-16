@@ -153,7 +153,7 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
 
-    <script src="./dist/js/bundle.min.js"></script>
+  <script src="./dist/js/bundle.min.js"></script>
 
   <script>
     if (readCookie("vividli-face") === null) {
@@ -274,10 +274,13 @@
         $("#get-personId-info").append('<span class="loading dots2"></span>');
         getPersonId((function (data) {
           try {
-            $('#get-personId-info').empty().append(`personId: ${data[0].candidates[0].personId}
-            \n with <b>confidence: ${Math.round(data[0].candidates[0].confidence * 100)}%</b>
-          faceId: ${data[0].faceId}`);
-            $('#get-personId').text("   Hide");
+            getPersonByPersonId(data[0].candidates[0].personId, person => {
+              $('#get-personId-info').empty().append(`It is ${person.name} with personId: ${data[0].candidates[0].personId}
+                 \n and with <b>confidence: ${Math.round(data[0].candidates[0].confidence * 100)}%</b>
+                 faceId: ${data[0].faceId}`);
+              $('#get-personId').text("   Hide");
+            })
+
           }
           catch (e) {
             $("#get-personId-info").text(`Error occured because somebody was not looking at the camera`);

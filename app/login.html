@@ -104,7 +104,7 @@
 
                                         swal({ title: "Face has been added!", text: `Welcome on board ${inputValue}`, type: "success" },
                                             function () {
-                                                createCookie('vividli-face', person.personId, 1);
+                                                createCookie('vividli-face', response.personId, 1);
                                                 url = window.location.href;
                                                 window.location.href = url.replace('/login.html', ' ');
                                             });
